@@ -1,26 +1,18 @@
 import React from 'react';
-import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Home from '@/views/Home'
-import Bar from '@/components/Bar'
+// import Layout from './views/Authority/Layout';
+import './index.css';
+import { BrowserRouter } from 'react-router-dom';
+// import { HashRouter as Router } from 'react-router-dom'
+import RouterConfig from '@/router';
+import Auth from './auth/Auth';
 
 function App() {
   return (
-    <Router>
-      <Bar
-        a={1}
-        c={{
-          width: 10,
-          height: 100,
-          background: 'red',
-        }} >
-        555
-      </Bar>
-      <Routes>
-        <Route path="/" element={<Navigate to="/home" />} />
-        <Route path="/home" element={<Home />} />
-      </Routes>
-    </Router>
+    <BrowserRouter>
+      <Auth>
+        <RouterConfig />
+      </Auth>
+    </BrowserRouter>
   );
 }
-
 export default App;
