@@ -11,7 +11,7 @@ export default function LayoutView() {
         <div className="r flex  ">
           <div className="logo  w-[45px] leading-[30px] h-[30px] bg-[#ff3456]">logo</div>
           <div className="title w-[200px] leading-[30px] h-[30px] ml-[12px] text-[20px] font-bold">
-            一秒快送后台管理系统...
+            卢文斌一秒快送后台管理系统
           </div>
         </div>
         <div className="l">
