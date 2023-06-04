@@ -1,45 +1,24 @@
-/* eslint-disable import/no-extraneous-dependencies */
-import request from '@/service/request';
+/* eslint-disable import/no-unresolved */
 import { AxiosPromise } from 'axios';
+import request from '@/service/request';
 
-export type ISongListTypeResponse = {
-  code: number;
-  all: {
-    name: string;
-    resourceCount: number;
-    imgId: number;
-    imgUrl: object;
-    type: number;
-    category: number;
-    resourceType: number;
-    hot: boolean;
-    activity: boolean;
-  };
-  sub: {
-    name: string;
-    resourceCount: number;
-    imgId: number;
-    imgUrl: object;
-    type: number;
-    category: number;
-    resourceType: number;
-    hot: boolean;
-    activity: boolean;
-  }[];
-  categories: { 0: string; 1: string; 2: string; 3: string; 4: string };
-};
+interface IloginParams {
+  adminName?: string;
+  adminPwd: string;
+  no: string;
+  verifyCode: string;
+}
+export const login = (params?: IloginParams): Promise<any> =>
+  request.post('/admin/login', {
+    params,
+  });
 
-export const getSongListType = () =>
-  <AxiosPromise<ISongListTypeResponse>>request.get('/playlist/catlist');
-// request.get('/playlist/catlist') as AxiosPromise<ISongListTypeResponse>;
-
-interface IGetTopPlaylistParams {
+interface IGetTopPlaylist {
   order?: 'new' | 'hot';
   cat?: string;
   limit?: number;
   offset?: number;
 }
-
 type IGetTopPlaylistResponse = {
   playlists: {
     name: string;
@@ -152,7 +131,8 @@ type IGetTopPlaylistResponse = {
   more: boolean;
   cat: string;
 };
-export const getTopPlaylist = async (params?: IGetTopPlaylistParams) => {
+
+export const getTopPlaylist = async (params?: IGetTopPlaylist) => {
   const res = request.get('/top/playlist', {
     params,
   }) as AxiosPromise<IGetTopPlaylistResponse>;
