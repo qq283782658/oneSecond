@@ -27,7 +27,7 @@ export default function Login() {
         <div className="title my-[40px] w-full flex justify-center items-center">
           <div className="logo  w-[45px] leading-[40px] h-[40px] bg-[#ff3456]">logo</div>
           <div className="title  leading-[40px] h-[40px] ml-[12px] text-[26px] font-bold">
-            一秒快送后台管理系统55
+            卢文斌一秒快送后台管理系统554657657657
           </div>
         </div>
         <div className="form_warp">
