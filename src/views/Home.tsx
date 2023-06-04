@@ -19,7 +19,7 @@ export default function Home() {
   return (
     <>
       <ul>
-        <h1>登录功2</h1>
+        <h1>登录成功</h1>
         {topPlaylist?.map((item) => (
           <li key={item.id}>{item.description}</li>
         ))}
