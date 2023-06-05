@@ -12,7 +12,6 @@ import Rider from '@/views/Rider';
 import Order from '@/views/Order';
 import City from '@/views/City';
 
-
 // const Screening = React.lazy(() => import('@/views/Screening'));
 // const User = React.lazy(() => import('@/views/User'));
 // const Config = React.lazy(() => import('@/views/Config'));
@@ -108,8 +107,6 @@ const list = [
   },
 ];
 
-
-
 const Home: React.FC = () => {
   const {
     token: { colorBgContainer },
@@ -135,7 +132,7 @@ const Home: React.FC = () => {
       <Header style={{ display: 'flex', alignItems: 'center' }}>
         {/* <div className="demo-logo" /> */}
         <div>
-          <span className="text-white">一秒快送后台管理系统</span>
+          <span className="text-white">一秒快送后台管理系统 </span>
         </div>
       </Header>
       <Layout style={{ margin: '24px 0 0 0' }}>
