@@ -1,35 +1,83 @@
-import React from 'react';
-import { Card, Button, Form, Input } from 'antd';
+/* eslint-disable no-cond-assign */
+/* eslint-disable import/no-extraneous-dependencies */
+import React, { useState, useEffect } from 'react';
+import { Card, Button, Form, Input, message } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import store from 'storejs';
 import { useNavigate } from 'react-router-dom';
 import { useRequest } from 'ahooks';
-import { getTopPlaylist } from '@/service';
+import { GetLogin, GetVerifycode } from '@/service';
+import logo from '@/assets/logo.svg';
+import cookie from 'react-cookies';
 import loginImg from '../../static/images/login .png';
 
 export default function Login() {
-  const { data: TopPlaylist } = useRequest(() => getTopPlaylist({ cat: '全部' }));
   const navigator = useNavigate();
+  // 获取登录成功后cookie携带的token
+  const getCookie = (name: string): string => {
+    let arr;
+    const reg = new RegExp(`(^| )${name}=([^;]*)(;|$)`);
+    if ((arr = document.cookie.match(reg))) return unescape(arr[2]);
+    return '';
+  };
+  // 登录接口
+  const { run: RunLogin } = useRequest(GetLogin, {
+    manual: true,
+    onSuccess(res) {
+      if (res.data.code === 200) {
+        message.success('登录成功，稍后进入');
+        // 存值的语法：
+        cookie.save('token', getCookie('token'), { path: '/' });
+        const t = setTimeout(() => {
+          navigator('/layout');
+          clearTimeout(t);
+        }, 2000);
+      } else {
+        message.error(res.data.msg);
+      }
+    },
+  });
+  // 获取验证图片
+  const [verifyCodeImg, setVerifyCodeImg] =
+    useState<Awaited<ReturnType<typeof GetVerifycode>>['svg']>('');
+  // 获取登录参数
+  const [no, setNo] = useState('');
+
+  const { run: runSetVer } = useRequest(GetVerifycode, {
+    manual: true,
+    onSuccess(res) {
+      setNo(res.no);
+      setVerifyCodeImg(res.svg);
+    },
+  });
+  useEffect(() => {
+    GetVerifycode().then((res) => {
+      setVerifyCodeImg(res.svg);
+      setNo(res.no);
+    });
+  }, []);
+
   const onFinish = (values: any) => {
-    store.set('token', values);
-    navigator('/layout');
-    // eslint-disable-next-line no-console
-    console.log('Received values of form: ', values);
+    const { password, username, yzm } = values;
+
+    RunLogin({
+      adminName: username,
+      adminPwd: password,
+      no,
+      verifyCode: yzm,
+    });
   };
   return (
     <div className="w-full  flex justify-center">
-      <ul>
-        {TopPlaylist?.map((item) => (
-          <li key={item.id}>{item.coverImgId}</li>
-        ))}
-      </ul>
       <div className="w-[800px]  flex flex-col">
         <div className="title my-[40px] w-full flex justify-center items-center">
-          <div className="logo  w-[45px] leading-[40px] h-[40px] bg-[#ff3456]">logo</div>
+          <div className="logo  w-[45px] leading-[40px] h-[40px] ">
+            <img src={logo} className="w-full h-full" alt="" />
+          </div>
           <div className="title  leading-[40px] h-[40px] ml-[12px] text-[26px] font-bold">
-            卢文斌一秒快送后台管理系统554657657657
+            一秒快送后台管理系统
           </div>
         </div>
+
         <div className="form_warp">
           <Card style={{ width: 800, height: 500 }}>
             <div className="flex">
@@ -50,13 +98,13 @@ export default function Login() {
                       rules={[
                         {
                           required: true,
-                          message: 'Please input your Username!',
+                          message: '请输入账号!',
                         },
                       ]}
                     >
                       <Input
                         prefix={<UserOutlined className="site-form-item-icon" />}
-                        placeholder="Username"
+                        placeholder="管理员账号"
                       />
                     </Form.Item>
                     <Form.Item
@@ -64,22 +112,22 @@ export default function Login() {
                       rules={[
                         {
                           required: true,
-                          message: 'Please input your Password!',
+                          message: '请输入账号!',
                         },
                       ]}
                     >
                       <Input
                         prefix={<LockOutlined className="site-form-item-icon" />}
                         type="password"
-                        placeholder="Password"
+                        placeholder="管理员密码"
                       />
                     </Form.Item>
                     <Form.Item
-                      name="password"
+                      name="yzm"
                       rules={[
                         {
                           required: true,
-                          message: 'Please input your Password!',
+                          message: '请输入验证码!',
                         },
                       ]}
                     >
@@ -88,11 +136,16 @@ export default function Login() {
                           <Input
                             prefix={<LockOutlined className="site-form-item-icon" />}
                             type="password"
-                            placeholder="Password"
+                            placeholder="输入验证码"
                           />
                         </div>
-
-                        <div className="h-full w-[45%]">4558</div>
+                        <img
+                          onClick={runSetVer}
+                          src={`data:image/svg+xml;base64,${btoa(verifyCodeImg)}`}
+                          alt=""
+                          width="150"
+                          height="50"
+                        />
                       </div>
                     </Form.Item>
 
@@ -108,6 +161,14 @@ export default function Login() {
           </Card>
         </div>
       </div>
+      <footer className="w-full h-auto fixed bottom-0 ">
+        <div className="w-full text-center text-[12px]">
+          Copyright © 2022 包小盒 All right reserved.
+        </div>
+        <div className="w-full text-center text-[14px] mt-[8px]">
+          浙ICP备19025175号-4 aaa浙公网安备 33010602011191号
+        </div>
+      </footer>
     </div>
   );
 }

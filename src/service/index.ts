@@ -2,139 +2,32 @@
 import { AxiosPromise } from 'axios';
 import request from '@/service/request';
 
-interface IloginParams {
-  adminName?: string;
+/**
+ * 登录login接口
+ */
+
+interface ILogin {
+  adminName: string;
   adminPwd: string;
-  no: string;
   verifyCode: string;
+  no: string;
 }
-export const login = (params?: IloginParams): Promise<any> =>
-  request.post('/admin/login', {
-    params,
-  });
+type ILoginResponseData = { code: number; msg: string };
 
-interface IGetTopPlaylist {
-  order?: 'new' | 'hot';
-  cat?: string;
-  limit?: number;
-  offset?: number;
-}
-type IGetTopPlaylistResponse = {
-  playlists: {
-    name: string;
-    id: number;
-    trackNumberUpdateTime: number;
-    status: number;
-    userId: number;
-    createTime: number;
-    updateTime: number;
-    subscribedCount: number;
-    trackCount: number;
-    cloudTrackCount: number;
-    coverImgUrl: string;
-    coverImgId: number;
-    description: string;
-    tags: string[];
-    playCount: number;
-    trackUpdateTime: number;
-    specialType: number;
-    totalDuration: number;
-    creator: {
-      defaultAvatar: boolean;
-      province: number;
-      authStatus: number;
-      followed: boolean;
-      avatarUrl: string;
-      accountStatus: number;
-      gender: number;
-      city: number;
-      birthday: number;
-      userId: number;
-      userType: number;
-      nickname: string;
-      signature: string;
-      description: string;
-      detailDescription: string;
-      avatarImgId: number;
-      backgroundImgId: number;
-      backgroundUrl: string;
-      authority: number;
-      mutual: boolean;
-      expertTags: object;
-      experts: object;
-      djStatus: number;
-      vipType: number;
-      remarkName: object;
-      authenticationTypes: number;
-      avatarDetail: object;
-      anchor: boolean;
-      avatarImgIdStr: string;
-      backgroundImgIdStr: string;
-      avatarImgId_str: string;
-    };
-    tracks: object;
-    subscribers: {
-      defaultAvatar: boolean;
-      province: number;
-      authStatus: number;
-      followed: boolean;
-      avatarUrl: string;
-      accountStatus: number;
-      gender: number;
-      city: number;
-      birthday: number;
-      userId: number;
-      userType: number;
-      nickname: string;
-      signature: string;
-      description: string;
-      detailDescription: string;
-      avatarImgId: number;
-      backgroundImgId: number;
-      backgroundUrl: string;
-      authority: number;
-      mutual: boolean;
-      expertTags: object;
-      experts: object;
-      djStatus: number;
-      vipType: number;
-      remarkName: object;
-      authenticationTypes: number;
-      avatarDetail: object;
-      anchor: boolean;
-      avatarImgIdStr: string;
-      backgroundImgIdStr: string;
-      avatarImgId_str: string;
-    }[];
-    subscribed: boolean;
-    commentThreadId: string;
-    newImported: boolean;
-    adType: number;
-    highQuality: boolean;
-    privacy: number;
-    ordered: boolean;
-    anonimous: boolean;
-    coverStatus: number;
-    recommendInfo: object;
-    socialPlaylistCover: object;
-    recommendText: object;
-    coverText: object;
-    relateResType: object;
-    relateResId: object;
-    shareCount: number;
-    coverImgId_str: string;
-    alg: string;
-    commentCount: number;
-  }[];
-  total: number;
+export const GetLogin = (params: ILogin): AxiosPromise<ILoginResponseData> => {
+  const res = request.post('/admin/login', params);
+  return res;
+};
+/**
+ * 验证码接口
+ */
+type IVerifycodeResponseData = {
   code: number;
-  more: boolean;
-  cat: string;
+  msg: string;
+  data: { svg: string; no: string };
 };
-
-export const getTopPlaylist = async (params?: IGetTopPlaylist) => {
-  const res = request.get('/top/playlist', {
-    params,
-  }) as AxiosPromise<IGetTopPlaylistResponse>;
-  return (await res).data.playlists;
+export const GetVerifycode = async () => {
+  const res = <AxiosPromise<IVerifycodeResponseData>>request.get('/admin/verifycode');
+  return (await res).data.data;
 };
+export default {};
