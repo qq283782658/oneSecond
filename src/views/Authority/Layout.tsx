@@ -12,8 +12,6 @@ import Rider from '@/views/Rider';
 import Order from '@/views/Order';
 import City from '@/views/City';
 
-console.log(location.pathname);
-
 // const Screening = React.lazy(() => import('@/views/Screening'));
 // const User = React.lazy(() => import('@/views/User'));
 // const Config = React.lazy(() => import('@/views/Config'));
